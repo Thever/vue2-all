@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>分析生命周期</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root" :x="n">
+			<h2 v-text="n"></h2>
+			<h2>当前的n值是：{{n}}</h2>
+			<button @click="add">点我n+1</button>
+			<button @click="bye">点我销毁vm</button>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+		const vm = new Vue({
+			el:'#root',
+			// template 会完全替换 el 绑定的容器内容，原本绑定的id,属性等也会消失
+			// template 属性中不能使用 <template> 作为根元素
+			// template:`
+			// 	<div>
+			// 		<h2>当前的n值是：{{n}}</h2>
+			// 		<button @click="add">点我n+1</button>
+			// 	</div>
+			// `,
+			data:{
+				n:1
+			},
+			methods: {
+				add(){
+					console.log('add')
+					this.n++
+				},
+				bye(){
+					console.log('bye')
+					this.$destroy()
+				}
+			},
+			watch:{
+				n(){
+					console.log('n变了')
+				}
+			},
+			//	debugger指令要在浏览器中启用了控制台才会生效
+			beforeCreate() {
+				console.log('beforeCreate')
+				// console.log(this)
+				// debugger
+			},
+			created() {
+				console.log('created')
+				// console.log(this)
+				// debugger
+			},
+			beforeMount() {
+				console.log('beforeMount')
+				// console.log(this)
+				// debugger
+			},
+			mounted() {
+				console.log('mounted')
+				// console.log(this)
+				// debugger
+			},
+			beforeUpdate() {
+				console.log('beforeUpdate')
+				// console.log(this)
+				// debugger
+			},
+			updated() {
+				console.log('updated')
+				// console.log(this)
+				// debugger
+				// 如果加上 this.n = 100
+				// 那么又会触发vue的数据更新，执行beforeUpdate, updated
+				// 然后运行赋值语句, 发现 n 的值为要赋值的值，就不会继续执行 vue 更新事件了
+			},
+			//	beforeDestroy, destroy 阶段可以读取数据，调用方法，但是所有操作不会触发数据更新，不会触发beforeUpdated,updated
+			beforeDestroy() {
+				console.log('beforeDestroy')
+				// console.log(this)
+				// debugger
+				this.add()
+			},
+			destroyed() {
+				//	只是移除自定义事件，但是不会移除原生事件
+				console.log('destroyed')
+			},
+		})
+	</script>
+</html>

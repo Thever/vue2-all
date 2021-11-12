@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>事件修饰符</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+		<style>
+			*{
+				margin-top: 20px;
+			}
+			.demo1{
+				height: 50px;
+				background-color: skyblue;
+			}
+			.box1{
+				padding: 5px;
+				background-color: skyblue;
+			}
+			.box2{
+				padding: 5px;
+				background-color: orange;
+			}
+			.list{
+				width: 200px;
+				height: 200px;
+				background-color: peru;
+				overflow: auto;
+			}
+			li{
+				height: 100px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 
+				Vue中的事件修饰符：
+						1.prevent：阻止默认事件（常用）；
+						2.stop：阻止事件冒泡（常用）；
+						3.once：事件只触发一次（常用）；
+						4.capture：使用事件的捕获模式；
+						5.self：只有event.target是当前操作的元素时才触发事件；
+						6.passive：事件的默认行为立即执行，无需等待事件回调执行完毕；
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2>欢迎来到{{name}}学习</h2>
+			<!-- 阻止默认事件（常用） -->
+			<a href="http://www.atguigu.com" @click.prevent="showInfo">点我提示信息</a>
+
+			<!-- 阻止事件冒泡（常用） -->
+			<div class="demo1" @click="showInfo">
+				<button @click.stop="showInfo">点我提示信息</button>
+				<!-- 修饰符可以连续写 -->
+				<!-- <a href="http://www.atguigu.com" @click.prevent.stop="showInfo">点我提示信息</a> -->
+			</div>
+
+			<!-- 事件只触发一次（常用） -->
+			<button @click.once="showInfo">点我提示信息</button>
+
+			<!-- 使用事件的捕获模式 -->
+			<!-- 捕获阶段是从外向触发，事件处理是在冒泡阶段处理，冒泡阶段是从内往外触发 2,1-->
+			<!-- 使用捕获模式，就表示在捕获阶段触发事件处理，就是在捕获阶段处理1，然后进入到冒泡处理阶段处理2 -->
+			<!-- 同理的，如果有多个捕获模式，那么就按照从外网内的顺序捕获，捕获到的就触发处理函数 -->
+			<div class="box1" @click.capture="showMsg(1)">
+				div1
+				<div class="box2" @click="showMsg(2)">
+					div2
+				</div>
+			</div>
+
+			<!-- 只有event.target是当前操作的元素时才触发事件； -->
+			<!-- 注意不阻止冒泡的话，父元素的方法也会被触发，只不过触发对象是子元素 -->
+			<div class="demo1" @click.self="showInfo">
+				<button @click="showInfo">点我提示信息</button>
+			</div>
+
+			<!-- 事件的默认行为立即执行，无需等待事件回调执行完毕； -->
+			<!-- scroll是滚动条的滚动，wheel是鼠标滚轮的滚动 -->
+			<!-- 默认的处理流程是，事件触发，处理回调函数，处理完成后再进行默认的处理 -->
+			<!-- passive可以跳过回调函数处理，直接触发默认的处理方式 -->
+			<ul @wheel.passive="demo" class="list">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+			</ul>
+
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷'
+			},
+			methods:{
+				showInfo(e){
+					alert('同学你好！')
+					console.log(e.target)
+				},
+				showMsg(msg){
+					console.log(msg)
+				},
+				demo(){
+					for (let i = 0; i < 100000; i++) {
+						console.log('#')
+					}
+					console.log('累坏了')
+				}
+			}
+		})
+	</script>
+</html>

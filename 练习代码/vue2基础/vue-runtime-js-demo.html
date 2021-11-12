@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/vue.runtime.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script>
+    new Vue({
+        el:'#root',
+        // vue.runtime版本没有模块解析器，不能使用template属性
+        // template:`<h1>你好啊</h1>`
+        // 需要使用render方法来渲染内容
+        // 单参数，传入组件
+        // 双参数，传入标签，标签内容
+        render:function(creatElement){
+            return creatElement('h1','你好啊')
+        }
+    })
+</script>
+</html>
